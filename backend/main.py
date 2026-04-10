@@ -16,8 +16,8 @@ app.add_middleware(
 
 # Configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Data is usually one level up or at root
-DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "data")
+# Data is now inside the backend folder for easier deployment
+DATA_DIR = os.path.join(BASE_DIR, "data")
 DB_PATH = os.path.join(DATA_DIR, "pillars.db")
 
 @app.get("/map-data")
