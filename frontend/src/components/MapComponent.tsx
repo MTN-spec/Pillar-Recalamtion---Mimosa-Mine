@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, LayersControl, LayerGroup, useMap, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, LayersControl, LayerGroup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Pillar } from '../types/pillar';
 
 // Component to handle map centering/zooming
 const MapController = ({ selectedPillarId, geoJsonData }: { selectedPillarId: string | null, geoJsonData: any }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (!selectedPillarId || !geoJsonData) return;
+    if (!selectedPillarId || !geoJsonData || !geoJsonData.features) return;
 
     const feature = geoJsonData.features.find(
-      (f: any) => f.properties.pillar_id === selectedPillarId
+      (f: any) => f.properties?.pillar_id === selectedPillarId
     );
 
     if (feature && feature.geometry) {
@@ -32,10 +33,10 @@ const { BaseLayer } = LayersControl;
 
 interface Props {
   geoJsonData: any;
-  onPillarClick: (pillar: any) => void;
+  onPillarClick: (properties: Pillar) => void;
   selectedPillarId: string | null;
-  shiftSelection: string[]; // Added: tracking pillars selected for the current shift
-  onToggleShiftPillar: (id: string) => void; // Added: toggle logic
+  shiftSelection: string[]; 
+  onToggleShiftPillar: (id: string) => void; 
 }
 
 const MapComponent: React.FC<Props> = ({
@@ -49,7 +50,8 @@ const MapComponent: React.FC<Props> = ({
   const [polylineData, setPolylineData] = useState<any>(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/polyline-data')
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+    fetch(`${API_BASE}/polyline-data`)
       .then(res => {
         if (!res.ok) throw new Error("Polyline fetch failed");
         return res.json();

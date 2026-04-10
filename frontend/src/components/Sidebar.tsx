@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Database, Zap, Loader, Calendar, Printer, Edit3, Save, Search } from 'lucide-react';
+import { Pillar, AppTab } from '../types/pillar';
 
 interface Props {
-  selectedPillar: any;
-  featureImportance: any;
+  selectedPillar: Pillar | null;
+  featureImportance: Record<string, number>;
   onReclaim: (id: string) => void;
-  onUpdatePillar: (id: string, data: any) => void;
+  onUpdatePillar: (id: string, data: Partial<Pillar>) => void;
   onSaveShift: (name: string) => void;
   shiftPillars: string[];
   loading: boolean;
-  allPillars: any[];
+  allPillars: Pillar[];
   onSelectPillar: (pillar: any) => void;
-  activeTab: 'map' | 'planner' | 'database';
-  setActiveTab: (tab: 'map' | 'planner' | 'database') => void;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
 }
 
 const Sidebar: React.FC<Props> = ({ 
@@ -43,6 +44,7 @@ const Sidebar: React.FC<Props> = ({
   );
 
   const startEdit = () => {
+    if (!selectedPillar) return;
     setEditValues({
       confine: selectedPillar.confine,
       ucs: selectedPillar.ucs,
@@ -53,6 +55,7 @@ const Sidebar: React.FC<Props> = ({
   };
 
   const handleSaveEdit = () => {
+    if (!selectedPillar) return;
     onUpdatePillar(selectedPillar.pillar_id, editValues);
     setEditing(false);
   };

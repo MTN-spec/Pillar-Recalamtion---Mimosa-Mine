@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MapComponent from './components/MapComponent';
 import Sidebar from './components/Sidebar';
+import { Pillar, AppTab } from './types/pillar';
 
 const App: React.FC = () => {
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
-  const [selectedPillar, setSelectedPillar] = useState<any>(null);
-  const [featureImportance, setFeatureImportance] = useState<any>({});
+  const [selectedPillar, setSelectedPillar] = useState<Pillar | null>(null);
+  const [featureImportance, setFeatureImportance] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [shiftPillars, setShiftPillars] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'map' | 'planner' | 'database'>('map');
-  const [allPillars, setAllPillars] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<AppTab>('map');
+  const [allPillars, setAllPillars] = useState<Pillar[]>([]);
   const [isPrintMode, setIsPrintMode] = useState(false);
 
   useEffect(() => {
@@ -148,7 +149,7 @@ const App: React.FC = () => {
         <MapComponent 
           geoJsonData={geoJsonData} 
           onPillarClick={handlePillarClick}
-          selectedPillarId={selectedPillar?.pillar_id}
+          selectedPillarId={selectedPillar?.pillar_id || null}
           shiftSelection={shiftPillars}
           onToggleShiftPillar={handleToggleShift}
         />
