@@ -50,7 +50,7 @@ const MapComponent: React.FC<Props> = ({
   const [polylineData, setPolylineData] = useState<any>(null);
 
   useEffect(() => {
-    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://pillar-recalamtion---mimosa-mine.onrender.com';
     fetch(`${API_BASE}/polyline-data`)
       .then(res => {
         if (!res.ok) throw new Error("Polyline fetch failed");

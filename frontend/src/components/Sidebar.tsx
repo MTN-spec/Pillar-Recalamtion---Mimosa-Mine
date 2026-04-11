@@ -99,7 +99,7 @@ const Sidebar: React.FC<Props> = ({
     <div className="sidebar glass-panel border-r border-slate-200 p-4 flex flex-col h-full overflow-hidden text-slate-800">
       <div className="flex items-center gap-2 mb-8 text-blue-600">
         <Database size={24} />
-        <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase italic">Pillar Intelligence</h1>
+        <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase italic">Pillar Intel</h1>
       </div>
 
       {/* Tab Navigation */}
@@ -121,6 +121,12 @@ const Sidebar: React.FC<Props> = ({
           className={`flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all ${activeTab === 'database' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-900 hover:bg-white/50'}`}
         >
           DATABASE
+        </button>
+        <button 
+          onClick={() => setActiveTab('analytics')}
+          className={`flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all ${activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-900 hover:bg-white/50'}`}
+        >
+          ANALYTICS
         </button>
       </div>
 
@@ -302,6 +308,14 @@ const Sidebar: React.FC<Props> = ({
             
             <p className="text-[8px] text-center text-slate-400 uppercase tracking-widest">{filteredPillars.length} Records found</p>
           </section>
+        ) : activeTab === 'analytics' ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            <Zap className="text-blue-500 mb-4" size={40} />
+            <h3 className="text-sm font-bold text-slate-900 uppercase mb-2">Advanced Analytics</h3>
+            <p className="text-[10px] text-slate-500 leading-relaxed uppercase tracking-wider font-medium">
+              Geotechnical statistics and safety score distributions are being visualized in the main view.
+            </p>
+          </div>
         ) : (
           <section className="space-y-4">
             <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl">

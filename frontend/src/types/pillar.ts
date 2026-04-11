@@ -10,4 +10,4 @@ export interface Pillar {
   sequence?: number;
 }
 
-export type AppTab = 'map' | 'planner' | 'database';
+export type AppTab = 'map' | 'planner' | 'database' | 'analytics';

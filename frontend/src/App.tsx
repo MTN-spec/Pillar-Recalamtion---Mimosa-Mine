@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MapComponent from './components/MapComponent';
 import Sidebar from './components/Sidebar';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
 import { Pillar, AppTab } from './types/pillar';
 
 const App: React.FC = () => {
@@ -31,7 +32,7 @@ const App: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://pillar-recalamtion---mimosa-mine.onrender.com';
       const [mapRes, importanceRes, pillarsRes] = await Promise.all([
         axios.get(`${API_BASE}/map-data`),
         axios.get(`${API_BASE}/model/importance`),
@@ -78,7 +79,7 @@ const App: React.FC = () => {
   const handleUpdatePillar = async (id: string, updates: any) => {
     setLoading(true);
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://pillar-recalamtion---mimosa-mine.onrender.com';
       // POST handles both update and create in our new backend logic
       await axios.post(`${API_BASE}/pillars`, { pillar_id: id, ...updates });
       await fetchData();
@@ -93,7 +94,7 @@ const App: React.FC = () => {
 
   const handleReclaim = async (id: string) => {
     setLoading(true);
-    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://pillar-recalamtion---mimosa-mine.onrender.com';
     try {
       await axios.post(`${API_BASE}/reclaim/${id}`);
       await fetchData();
@@ -107,7 +108,7 @@ const App: React.FC = () => {
 
   const handleSaveShift = async (name: string) => {
     if (shiftPillars.length === 0) return;
-    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://pillar-recalamtion---mimosa-mine.onrender.com';
     try {
       await axios.post(`${API_BASE}/shifts`, {
         shift_name: name,
@@ -145,36 +146,44 @@ const App: React.FC = () => {
         onSelectPillar={handlePillarClick}
       />
       
-      <main className="flex-1 relative">
-        <MapComponent 
-          geoJsonData={geoJsonData} 
-          onPillarClick={handlePillarClick}
-          selectedPillarId={selectedPillar?.pillar_id || null}
-          shiftSelection={shiftPillars}
-          onToggleShiftPillar={handleToggleShift}
-        />
-        
-        {/* Top Overlay Legend */}
-        <div className="absolute top-4 left-4 z-[1000] glass-panel p-3 rounded-lg flex items-center gap-4 text-[10px] font-bold tracking-widest uppercase">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-            <span>Safe (&gt;70%)</span>
+      <main className="flex-1 relative flex flex-col">
+        {activeTab === 'analytics' ? (
+          <div className="flex-1 overflow-y-auto bg-[#0a0a0c]">
+             <AnalyticsDashboard pillars={allPillars} />
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
-            <span>Warning (40-70%)</span>
+        ) : (
+          <div className="flex-1 relative">
+            <MapComponent 
+              geoJsonData={geoJsonData} 
+              onPillarClick={handlePillarClick}
+              selectedPillarId={selectedPillar?.pillar_id || null}
+              shiftSelection={shiftPillars}
+              onToggleShiftPillar={handleToggleShift}
+            />
+            
+            {/* Top Overlay Legend */}
+            <div className="absolute top-4 left-4 z-[1000] glass-panel p-3 rounded-lg flex items-center gap-4 text-[10px] font-bold tracking-widest uppercase">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                <span>Safe (&gt;70%)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
+                <span>Warning (40-70%)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                <span>Critical (&lt;40%)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                <span>Reclaimed</span>
+              </div>
+              <div className="w-px h-4 bg-white/10 mx-2" />
+              <div className="text-white/40">Panel: 19 North Top</div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-            <span>Critical (&lt;40%)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-            <span>Reclaimed</span>
-          </div>
-          <div className="w-px h-4 bg-white/10 mx-2" />
-          <div className="text-white/40">Panel: 19 North Top</div>
-        </div>
+        )}
       </main>
     </div>
   );
