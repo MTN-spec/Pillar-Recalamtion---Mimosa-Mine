@@ -15,9 +15,9 @@ venv/
 ENV/
 
 # Database
-!data/*.db
 *.db
 *.sqlite3
+!backend/data/pillars.db
 
 # OS
 .DS_Store
